@@ -60,7 +60,6 @@ class TOFSensor(Sensor, Reconfigurable, Stoppable):
                 return list(config.attributes.fields[attribute_name].list_value)
             elif type_default == dict:
                 return dict(config.attributes.fields[attribute_name].struct_value)
-    
 
         i2c = busio.I2C(board.SCL, board.SDA)
         vl53 = VL53L0X(i2c)
@@ -104,7 +103,7 @@ class TOFSensor(Sensor, Reconfigurable, Stoppable):
 
         # Iterate through sensors
         for i, sensor in self.sensors:
-            readings[self.sensor_names[i]] = sensor.range
+            readings["test"] = sensor.range
 
         return readings
 

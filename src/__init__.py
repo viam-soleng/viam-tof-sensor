@@ -1,1 +1,1 @@
-from .dial_sensor import *
+from .tof_sensor import *
