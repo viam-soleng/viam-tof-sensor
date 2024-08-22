@@ -1,5 +1,6 @@
 # Standard library
 import board
+import busio
 from digitalio import DigitalInOut
 from adafruit_vl53l0x import VL53L0X
 from typing import Any, Dict, Mapping, Optional
@@ -60,36 +61,43 @@ class TOFSensor(Sensor, Reconfigurable, Stoppable):
             elif type_default == dict:
                 return dict(config.attributes.fields[attribute_name].struct_value)
     
+
+        i2c = busio.I2C(board.SCL, board.SDA)
+        vl53 = VL53L0X(i2c)
+        vl53.set_address(0x30)
+
+        self.sensors = [vl53]
+
         # Extract config info
-        board_name = get_attribute_from_config("board", None, str)
-        self.board = dependencies[Board.get_resource_name(board_name)]
+        # board_name = get_attribute_from_config("board", None, str)
+        # self.board = dependencies[Board.get_resource_name(board_name)]
 
-        name_to_gpio_map = get_attribute_from_config("gpio_map", None, dict)
-        self.gpio_pins = []
-        self.sensor_names = []
-        for key, value in name_to_gpio_map:
-            self.gpio_pins.append(key)
-            self.sensor_names.append(value)
+        # name_to_gpio_map = get_attribute_from_config("gpio_map", None, dict)
+        # self.gpio_pins = []
+        # self.sensor_names = []
+        # for key, value in name_to_gpio_map:
+        #     self.gpio_pins.append(key)
+        #     self.sensor_names.append(value)
 
-        # Define board
-        self.i2c = board.I2C()
+        # # Define board
+        # self.i2c = board.I2C()
 
-        # Define and initialize xShut pins
-        pins = []
-        for gpio_pin in self.gpio_pins:
-            pin = DigitalInOut(gpio_pin)
+        # # Define and initialize xShut pins
+        # pins = []
+        # for gpio_pin in self.gpio_pins:
+        #     pin = DigitalInOut(gpio_pin)
 
-            pins.append(pin)
-            pin.switch_to_output(value=False)
+        #     pins.append(pin)
+        #     pin.switch_to_output(value=False)
         
-        # Define TOF sensors (VL53L0X)
-        self.sensors = []
-        for i, pin in enumerate(pins):
-            pin.value = True
-            self.sensors.insert(i, VL53L0X(self.i2c))
+        # # Define TOF sensors (VL53L0X)
+        # self.sensors = []
+        # for i, pin in enumerate(pins):
+        #     pin.value = True
+        #     self.sensors.insert(i, VL53L0X(self.i2c))
 
-            if i < len(self.pins) - 1:
-                self.sensors[i].set_address(i + 0x30)
+        #     if i < len(self.pins) - 1:
+        #         self.sensors[i].set_address(i + 0x30)
 
     async def get_readings(self, extra: Optional[Dict[str, Any]] = None, **kwargs) -> Mapping[str, Any]:
         readings = {}
