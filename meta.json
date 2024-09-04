@@ -1,0 +1,13 @@
+{
+    "module_id": "soleng-sandbox:vl53l0x",
+    "visibility": "public",
+    "url": "https://github.com/viam-soleng/viam-tof-sensor",
+    "description": "Viam module for operating the VL53L0X Time-Of-Flight sensor. For more information see: https://github.com/viam-soleng/viam-tof-camera/blob/main/README.md",
+    "models": [
+      {
+        "api": "rdk:component:sensor",
+        "model": "soleng-sandbox:sensor:vl53l0x"
+      }
+    ],
+    "entrypoint": "exec.sh"
+  }
